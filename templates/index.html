@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Restaurant Menu</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+  <div class="container mx-auto p-6">
+    <h1 class="text-3xl font-bold mb-6 text-center">Restaurant Menu</h1>
+
+    <div class="text-center">
+      <button id="fetchBtn" class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600">
+        Fetch Menu
+      </button>
+    </div>
+
+    <div id="menu" class="mt-8 space-y-4"></div>
+  </div>
+
+  <script>
+    document.getElementById("fetchBtn").addEventListener("click", async () => {
+      const res = await fetch("/get_menu");
+      const data = await res.json();
+
+      const menuDiv = document.getElementById("menu");
+      menuDiv.innerHTML = "";
+
+      let currentCategory = "";
+
+      data.forEach(item => {
+        if (item.category !== currentCategory) {
+          currentCategory = item.category;
+          const catElem = document.createElement("h2");
+          catElem.className = "text-xl font-semibold mt-4";
+          catElem.textContent = currentCategory;
+          menuDiv.appendChild(catElem);
+        }
+
+        const dishElem = document.createElement("p");
+        dishElem.className = "ml-4 text-gray-700";
+        dishElem.textContent = item.dish;
+        menuDiv.appendChild(dishElem);
+      });
+    });
+  </script>
+</body>
+</html>
